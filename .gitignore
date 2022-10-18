@@ -1,0 +1,5 @@
+*
+!*/
+!index.html
+!lib/*.js
+!.gitignore

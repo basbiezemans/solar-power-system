@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Solar System Calculator</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            h1 {
+                padding-left: 8px;
+            }
+            div.flex-child {
+                width: 100%;
+            }
+            @media (min-width: 48em) {
+                div.flex-container {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    width: 100%;
+                }
+            }
+            select, input {
+                margin: 1px 0;
+            }
+            select {
+                width: 120px;
+            }
+            input {
+                width: 112px;
+            }
+            input:read-only {
+                width: 116px;
+                border-width: 0 0 1px 0;
+                background-color: white;
+            }
+            label {
+                font-size: 80%;
+            }
+            fieldset {
+                margin: 8px;
+            }
+            legend {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <h1>Solar Power System</h1>
+            <div class="flex-container">
+                <div class="flex-child">
+                    <fieldset>
+                        <legend>System Requirements</legend>
+                        <input type="number" min="1" max="100000" id="watts" name="watts" value="1">
+                        <label for="watts">Watt (load)</label><br>
+                        <input type="number" min="1" max="24" id="hours" name="hours" value="1">
+                        <label for="hours">Hours per day</label><br>
+                        <input type="number" min="1" max="365" id="backup" name="backup" value="1">
+                        <label for="backup">Days of autonomy</label><br>
+                    </fieldset>
+                </div>
+                <div class="flex-child">
+                    <fieldset>
+                        <legend>Battery</legend>
+                        <select id="type" name="type">
+                            <option value="lithium">Lithium Ion</option>
+                            <option value="leadacid">Lead Acid</option>
+                        </select>
+                        <label for="type">Type</label><br>
+                        <select id="voltage" name="voltage">
+                            <option value="12">12V</option>
+                            <option value="24">24V</option>
+                            <option value="48">48V</option>
+                        </select>
+                        <label for="voltage">Voltage</label><br>
+                        <br>
+                        Minimum Capacity<br>
+                        <input type="number" id="capacity" name="capacity" readonly>
+                        <label for="capacity">Watt hours</label><br>
+                        <input type="number" id="amphours" name="amphours" readonly>
+                        <label for="amphours">Amp hours</label><br>
+                        <br>
+                        Fuse Size<br>
+                        <input type="number" id="ampfuse" name="ampfuse" readonly>
+                        <label for="ampfuse">Amp</label><br>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Battery Cable</legend>
+                        <select id="cablelen" name="cablelen"></select>
+                        <label for="cablelen">Length</label><br>
+                        <br>
+                        <input type="text" id="wiregauge" name="wiregauge" readonly>
+                        <label for="wiregauge">Gauge / AWG</label><br>
+                    </fieldset>
+                </div>
+                <div class="flex-child">
+                    <fieldset>
+                        <legend>Solar Array</legend>
+                        <input type="number" min="1" max="24" id="avgsun" name="avgsun" value="5">
+                        <label for="avgsun">Avg. sun hours per day</label><br>
+                        <br>
+                        <input type="number" id="solarray" name="solarray" readonly>
+                        <label for="solarray">Watt (minimum)</label><br>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Solar Charge Controller</legend>
+                        <input type="number" id="amperage" name="amperage" readonly>
+                        <label for="amperage">Amperage (minimum)</label><br>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="lib/maybe.js"></script>
+    <script src="lib/utils.js"></script>
+    <script src="lib/cable.js"></script>
+    <script src="lib/battery.js"></script>
+    <script src="lib/system.js"></script>
+    <script>
+        $(document).ready(function() {
+            const sps = SolarPowerSystem();
+            const bc = BatteryCable();
+
+            $('#watts').on('change', function() {
+                const type = $('#type').val();
+                const watts = $(this).val();
+                const hours = $('#hours').val();
+                const backup = $('#backup').val();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+            });
+
+            $('#hours').on('change', function() {
+                const type = $('#type').val();
+                const watts = $('#watts').val();
+                const hours = $(this).val();
+                const backup = $('#backup').val();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+            });
+
+            $('#backup').on('change', function() {
+                const type = $('#type').val();
+                const watts = $('#watts').val();
+                const hours = $('#hours').val();
+                const backup = $(this).val();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+            });
+
+            $('#avgsun').on('change', function() {
+                const capacity = $('#capacity').val();
+                const hours = $(this).val();
+                $('#solarray').val(sps.getSolarArrayWattage(capacity, hours));
+            });
+
+            $('#type').on('change', function() {
+                const type = $(this).val();
+                const watts = $('#watts').val();
+                const hours = $('#hours').val();
+                const backup = $('#backup').val();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+            });
+
+            $('#voltage').on('change', function() {
+                const capacity = $('#capacity').val();
+                const voltage = $(this).val();
+                const hours = $('#avgsun').val();
+                $('#amphours').val(sps.getCapacityInAmpHours(capacity, voltage));
+                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).change();
+            });
+
+            $('#capacity').on('change', function() {
+                const capacity = $(this).val();
+                const voltage = $('#voltage').val();
+                const hours = $('#avgsun').val();
+                $('#solarray').val(sps.getSolarArrayWattage(capacity, hours));
+                $('#amphours').val(sps.getCapacityInAmpHours(capacity, voltage));
+                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).change();
+            });
+
+            $('#amperage').on('change', function() {
+                const amperage = $(this).val();
+                $('#ampfuse').val(sps.getFuseSizeAmperage(amperage));
+                $('#cablelen').change();
+            });
+
+            $('#cablelen').on('change', function() {
+                const cablelen = $(this).val();
+                const amperage = $('#amperage').val();
+                if (amperage) {
+                    const options = bc.getCurrentOptions();
+                    // When in doubt, over gauge (wire amps >= load amps)
+                    const current = options.find(e => e >= amperage);
+                    const NA = 'Not available';
+                    $('#wiregauge').val(current ? bc.getWireGauge(cablelen, current) : NA);
+                }
+            });
+
+            $('#cablelen').append(bc.getLengthOptions(value => {
+                const feet = value;
+                const meters = (feet / 3.281).toFixed(1);
+                return new Option(`${feet} ft (${meters} m)`, value);
+            }));
+        });
+    </script>
+</html>
