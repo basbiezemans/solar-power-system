@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    padding-left: 8px;
+}
+
+div.flex-child {
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    div.flex-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+}
+
+select, input {
+    margin: 1px 0;
+}
+
+select {
+    width: 120px;
+}
+
+input {
+    width: 112px;
+}
+
+input:read-only {
+    width: 116px;
+    border-width: 0 0 1px 0;
+    background-color: white;
+}
+
+label {
+    font-size: 80%;
+}
+
+fieldset {
+    margin: 8px;
+}
+
+legend {
+    font-weight: bold;
+}
