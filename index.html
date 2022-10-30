@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Solar System Calculator</title>
+        <title>Solar Power System Calculator</title>
         <link rel="stylesheet" href="css/style.css" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,6 +10,12 @@
         <form>
             <h1>Solar Power System</h1>
             <div class="flex-container">
+                <div class="flex-child">
+                    <fieldset>
+                        <legend>System Diagram</legend>
+                        <img src="img/solar-power-system-diagram.png" width="100%">
+                    </fieldset>
+                </div>
                 <div class="flex-child">
                     <fieldset>
                         <legend>System Requirements</legend>
@@ -21,8 +27,17 @@
                         <label for="backup">Days of autonomy</label><br>
                     </fieldset>
                     <fieldset>
-                        <legend>System Diagram</legend>
-                        <img src="solar-power-system-diagram.png" width="100%">
+                        <legend>Solar Panel</legend>
+                        <input type="number" min="1" max="24" id="avgsun" name="avgsun" value="5">
+                        <label for="avgsun">Avg. sun hours per day</label><br>
+                        <br>
+                        <input type="text" id="solarray" name="solarray" readonly>
+                        <label for="solarray">Watt (minimum)</label><br>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Battery Charge Controller</legend>
+                        <input type="text" id="amperage" name="amperage" readonly>
+                        <label for="amperage">Amp (minimum)</label><br>
                     </fieldset>
                 </div>
                 <div class="flex-child">
@@ -57,21 +72,6 @@
                         <br>
                         <input type="text" id="wiregauge" name="wiregauge" readonly>
                         <label for="wiregauge">Gauge / AWG</label><br>
-                    </fieldset>
-                </div>
-                <div class="flex-child">
-                    <fieldset>
-                        <legend>Solar Array</legend>
-                        <input type="number" min="1" max="24" id="avgsun" name="avgsun" value="5">
-                        <label for="avgsun">Avg. sun hours per day</label><br>
-                        <br>
-                        <input type="text" id="solarray" name="solarray" readonly>
-                        <label for="solarray">Watt (minimum)</label><br>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Solar Charge Controller</legend>
-                        <input type="text" id="amperage" name="amperage" readonly>
-                        <label for="amperage">Amp (minimum)</label><br>
                     </fieldset>
                 </div>
             </div>

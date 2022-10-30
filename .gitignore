@@ -1,6 +1,7 @@
 *
 !*/
 !index.html
+!img/*.png
 !css/*.css
 !lib/*.js
 !.gitignore
