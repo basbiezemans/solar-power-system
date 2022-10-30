@@ -32,6 +32,7 @@ input {
 }
 
 input:read-only {
+    pointer-events: none;
     width: 116px;
     border-width: 0 0 1px 0;
     background-color: white;
