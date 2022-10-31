@@ -166,6 +166,8 @@
                 const meters = (feet / 3.281).toFixed(1);
                 return new Option(`${feet} ft (${meters} m)`, value);
             }));
+
+            $('#watts').val(100).change();
         });
     </script>
 </html>
