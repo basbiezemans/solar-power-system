@@ -19,16 +19,16 @@
                 <div class="flex-child">
                     <fieldset>
                         <legend>System Requirements</legend>
-                        <input type="number" min="1" max="100000" id="watts" name="watts" value="1">
+                        <input type="text" id="watts" name="watts" value="1">
                         <label for="watts">Watt (load)</label><br>
-                        <input type="number" min="1" max="24" id="hours" name="hours" value="1">
+                        <input type="text" id="hours" name="hours" value="1">
                         <label for="hours">Hours per day</label><br>
-                        <input type="number" min="1" max="365" id="backup" name="backup" value="1">
+                        <input type="text" id="backup" name="backup" value="1">
                         <label for="backup">Days of autonomy</label><br>
                     </fieldset>
                     <fieldset>
                         <legend>Solar Panel</legend>
-                        <input type="number" min="1" max="24" id="avgsun" name="avgsun" value="5">
+                        <input type="text" id="avgsun" name="avgsun" value="5">
                         <label for="avgsun">Avg. sun hours per day</label><br>
                         <br>
                         <input type="text" id="solarray" name="solarray" readonly>
@@ -87,34 +87,49 @@
         $(document).ready(function() {
             const sps = SolarPowerSystem();
             const bc = BatteryCable();
+            const int = Utils().int;
+
+            $.fn.minmax = function(min, max) {
+                const value = int($(this).val());
+                if (value < min) {
+                    $(this).val(min);
+                } else if (value > max) {
+                    $(this).val(max);
+                }
+                return $(this);
+            };
+
+            $('#watts, #hours, #backup, #avgsun').on('click', function() {
+                $(this).select();
+            });
 
             $('#watts').on('change', function() {
                 const type = $('#type').val();
-                const watts = $(this).val();
+                const watts = $(this).minmax(1, 10000).val();
                 const hours = $('#hours').val();
                 const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
             });
 
             $('#hours').on('change', function() {
                 const type = $('#type').val();
                 const watts = $('#watts').val();
-                const hours = $(this).val();
+                const hours = $(this).minmax(1, 24).val();
                 const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
             });
 
             $('#backup').on('change', function() {
                 const type = $('#type').val();
                 const watts = $('#watts').val();
                 const hours = $('#hours').val();
-                const backup = $(this).val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+                const backup = $(this).minmax(1, 365).val();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
             });
 
             $('#avgsun').on('change', function() {
                 const capacity = $('#capacity').val();
-                const hours = $(this).val();
+                const hours = $(this).minmax(1, 24).val();
                 $('#solarray').val(sps.getSolarArrayWattage(capacity, hours));
             });
 
@@ -123,7 +138,7 @@
                 const watts = $('#watts').val();
                 const hours = $('#hours').val();
                 const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).change();
+                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
             });
 
             $('#voltage').on('change', function() {
@@ -131,7 +146,7 @@
                 const voltage = $(this).val();
                 const hours = $('#avgsun').val();
                 $('#amphours').val(sps.getCapacityInAmpHours(capacity, voltage));
-                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).change();
+                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).trigger('change');
             });
 
             $('#capacity').on('change', function() {
@@ -140,13 +155,13 @@
                 const hours = $('#avgsun').val();
                 $('#solarray').val(sps.getSolarArrayWattage(capacity, hours));
                 $('#amphours').val(sps.getCapacityInAmpHours(capacity, voltage));
-                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).change();
+                $('#amperage').val(sps.getSolarControllerAmperage(capacity, voltage)).trigger('change');
             });
 
             $('#amperage').on('change', function() {
                 const amperage = $(this).val();
                 $('#ampfuse').val(sps.getFuseSizeAmperage(amperage));
-                $('#cablelen').change();
+                $('#cablelen').trigger('change');
             });
 
             $('#cablelen').on('change', function() {
@@ -167,7 +182,7 @@
                 return new Option(`${feet} ft (${meters} m)`, value);
             }));
 
-            $('#watts').val(100).change();
+            $('#watts').val(100).trigger('change');
         });
     </script>
 </html>
