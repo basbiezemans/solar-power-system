@@ -29,6 +29,7 @@ select {
 
 input {
     width: 112px;
+    text-align: right;
 }
 
 input:read-only {
