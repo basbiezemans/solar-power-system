@@ -114,6 +114,8 @@
                     $(this).val(min);
                 } else if (value > max) {
                     $(this).val(max);
+                } else {
+                    $(this).val(value);
                 }
                 return $(this);
             };
@@ -148,12 +150,12 @@
                 const value = int(watts) * float(hours);
 
                 if (watts === '0') {
-                    alert('"Watts" is a required field');
+                    alert('"Watts" should be greater than zero');
                     return;
                 }
 
                 if (hours === '0') {
-                    alert('"Hours per day" is a required field');
+                    alert('"Hours per day" should be greater than zero');
                     return;
                 }
 
