@@ -147,6 +147,16 @@
                 const total = $('#watt-hours').val();
                 const value = int(watts) * float(hours);
 
+                if (watts === '0') {
+                    alert('"Watts" is a required field');
+                    return;
+                }
+
+                if (hours === '0') {
+                    alert('"Hours per day" is a required field');
+                    return;
+                }
+
                 list = list.concat({
                     descr: descr ? descr : 'Generic Device',
                     watts: int(watts),
@@ -159,7 +169,7 @@
                             + `<input type="text" id="device-item-${id++}"`
                             + ` class="list-item"`
                             + ` value="${item.watts * item.hours}"`
-                            + ` readonly> <label>${item.descr}</label>`;
+                            + ` readonly> <label>${item.descr}</label><br>`;
                     }
                 };
 
