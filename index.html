@@ -7,6 +7,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
+        <dialog device-modal>
+            <fieldset>
+                <legend>Device</legend>
+                <form id="device-form">
+                    <input type="text" id="descr" class="text" placeholder="Generic Device">
+                    <label for="descr">Name or type (optional)</label><br>
+                    <input type="text" id="watts" class="number" value="0">
+                    <label for="watts">Watts</label><br>
+                    <input type="text" id="hours" class="number" value="0">
+                    <label for="hours">Hours per day</label><br>
+                </form>
+                <br>
+                <button type="button" id="modal-hide" name="modal-hide">Cancel</button>
+                <button type="button" id="modal-save" name="modal-save">Add</button>
+            </fieldset>
+        </dialog>
         <form>
             <h1>Solar Power System</h1>
             <div class="flex-container">
@@ -19,28 +35,26 @@
                 <div class="flex-child">
                     <fieldset>
                         <legend>System Requirements</legend>
-                        <input type="text" id="watts" name="watts" value="1">
-                        <label for="watts">Watt (load)</label><br>
-                        <input type="text" id="hours" name="hours" value="1">
-                        <label for="hours">Hours per day</label><br>
-                        <input type="text" id="backup" name="backup" value="1">
-                        <label for="backup">Days of autonomy</label><br>
+                        <button type="button" id="modal-show" name="modal-show" class="show">Add device</button><br>
+                        <div id="device-list"></div>
+                        <br>
+                        <input type="text" id="watt-hours" name="watt-hours" readonly>
+                        <label for="watt-hours">Watt hours</label><br>
+                        <br>
+                        Autonomy<br>
+                        <input type="text" id="backup" class="number" name="backup" value="1">
+                        <label for="backup">Day(s)</label><br>
                     </fieldset>
+                </div>
+                <div class="flex-child">
                     <fieldset>
                         <legend>Solar Panel</legend>
-                        <input type="text" id="avgsun" name="avgsun" value="5">
+                        <input type="text" id="avgsun" class="number" name="avgsun" value="7">
                         <label for="avgsun">Avg. sun hours per day</label><br>
                         <br>
                         <input type="text" id="solarray" name="solarray" readonly>
                         <label for="solarray">Watt (minimum)</label><br>
                     </fieldset>
-                    <fieldset>
-                        <legend>Battery Charge Controller</legend>
-                        <input type="text" id="amperage" name="amperage" readonly>
-                        <label for="amperage">Amp (minimum)</label><br>
-                    </fieldset>
-                </div>
-                <div class="flex-child">
                     <fieldset>
                         <legend>Battery</legend>
                         <select id="type" name="type">
@@ -56,14 +70,18 @@
                         <label for="voltage">Voltage</label><br>
                         <br>
                         Minimum Capacity<br>
-                        <input type="text" id="capacity" name="capacity" readonly>
-                        <label for="capacity">Watt hours</label><br>
+                        <input type="hidden" id="capacity" name="capacity">
                         <input type="text" id="amphours" name="amphours" readonly>
                         <label for="amphours">Amp hours</label><br>
                         <br>
                         Fuse Size<br>
                         <input type="text" id="ampfuse" name="ampfuse" readonly>
                         <label for="ampfuse">Amp</label><br>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Battery Charge Controller</legend>
+                        <input type="text" id="amperage" name="amperage" readonly>
+                        <label for="amperage">Amp (minimum)</label><br>
                     </fieldset>
                     <fieldset>
                         <legend>Battery Cable</legend>
@@ -88,9 +106,10 @@
             const sps = SolarPowerSystem();
             const bc = BatteryCable();
             const int = Utils().int;
+            const float = Utils().float;
 
             $.fn.minmax = function(min, max) {
-                const value = int($(this).val());
+                const value = float($(this).val());
                 if (value < min) {
                     $(this).val(min);
                 } else if (value > max) {
@@ -99,32 +118,70 @@
                 return $(this);
             };
 
+            var list = []; // mutable device list
+
             $('#watts, #hours, #backup, #avgsun').on('click', function() {
                 $(this).select();
             });
 
             $('#watts').on('change', function() {
-                const type = $('#type').val();
-                const watts = $(this).minmax(1, 10000).val();
-                const hours = $('#hours').val();
-                const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
+                $(this).val($(this).minmax(1, 10000).val());
             });
 
             $('#hours').on('change', function() {
-                const type = $('#type').val();
+                $(this).val($(this).minmax(0, 24).val());
+            });
+
+            $('#modal-show').on('click', function() {
+                document.querySelector('[device-modal]').showModal();
+            });
+
+            $('#modal-hide').on('click', function() {
+                document.querySelector('[device-modal]').close();
+            });
+
+            $('#modal-save').on('click', function() {
+                const descr = $('#descr').val();
                 const watts = $('#watts').val();
-                const hours = $(this).minmax(1, 24).val();
+                const hours = $('#hours').val();
+                const total = $('#watt-hours').val();
+                const value = int(watts) * float(hours);
+
+                list = list.concat({
+                    descr: descr ? descr : 'Generic Device',
+                    watts: int(watts),
+                    hours: float(hours)
+                });
+
+                function toHTML(id) {
+                    return function(accumulator, item) {
+                        return accumulator
+                            + `<input type="text" id="device-item-${id++}"`
+                            + ` class="list-item"`
+                            + ` value="${item.watts * item.hours}"`
+                            + ` readonly> <label>${item.descr}</label>`;
+                    }
+                };
+
+                $('#device-list').html(list.reduce(toHTML(1), ''));
+                $('#device-form').trigger('reset');
+                $('#watt-hours').val((total ? float(total) : 0) + value).trigger('change');
+                
+                document.querySelector('[device-modal]').close();
+            });
+
+            $('#watt-hours').on('change', function() {
+                const type = $('#type').val();
+                const whrs = $(this).minmax(1, 100000).val();
                 const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
+                $('#capacity').val(sps.getBatteryCapacity(type, whrs, backup)).trigger('change');
             });
 
             $('#backup').on('change', function() {
                 const type = $('#type').val();
-                const watts = $('#watts').val();
-                const hours = $('#hours').val();
+                const whrs = $('#watt-hours').val();
                 const backup = $(this).minmax(1, 365).val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
+                $('#capacity').val(sps.getBatteryCapacity(type, whrs, backup)).trigger('change');
             });
 
             $('#avgsun').on('change', function() {
@@ -135,10 +192,9 @@
 
             $('#type').on('change', function() {
                 const type = $(this).val();
-                const watts = $('#watts').val();
-                const hours = $('#hours').val();
+                const whrs = $('#watt-hours').val();
                 const backup = $('#backup').val();
-                $('#capacity').val(sps.getBatteryCapacity(type, watts, hours, backup)).trigger('change');
+                $('#capacity').val(sps.getBatteryCapacity(type, whrs, backup)).trigger('change');
             });
 
             $('#voltage').on('change', function() {
@@ -181,8 +237,6 @@
                 const meters = (feet / 3.281).toFixed(1);
                 return new Option(`${feet} ft (${meters} m)`, value);
             }));
-
-            $('#watts').val(100).trigger('change');
         });
     </script>
 </html>

@@ -32,6 +32,10 @@ input {
     text-align: right;
 }
 
+input.text {
+    text-align: left;
+}
+
 input:read-only {
     pointer-events: none;
     width: 116px;
@@ -49,4 +53,8 @@ fieldset {
 
 legend {
     font-weight: bold;
+}
+
+button.show {
+    float: right;
 }
