@@ -1,7 +1,34 @@
-*
-!*/
-!index.html
-!img/*.png
-!css/*.css
-!lib/*.js
-!.gitignore
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+lib/
+esm/
+
+# TypeScript compilation
+*.tsbuildinfo
+
+# Logs and caches
+*.log
+coverage/
+.eslintcache
+.parcel-cache/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE/Editor
+.vscode/
+.idea/
+*.code-workspace
+
+# Test artifacts
+playwright-report/
+cypress/videos/
+cypress/screenshots/

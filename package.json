@@ -1,0 +1,19 @@
+{
+  "name": "solar-power-system",
+  "version": "1.0.0",
+  "description": "Solar power system calculator",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.4"
+  }
+}

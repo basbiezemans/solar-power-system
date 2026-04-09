@@ -96,17 +96,14 @@
         </form>
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="lib/maybe.js"></script>
-    <script src="lib/utils.js"></script>
-    <script src="lib/cable.js"></script>
-    <script src="lib/battery.js"></script>
-    <script src="lib/system.js"></script>
-    <script>
+    <script type="module">
+        import { SolarPowerSystem, BatteryCable, Utils } from '/dist/index.js';
+
         $(document).ready(function() {
-            const sps = SolarPowerSystem();
-            const bc = BatteryCable();
-            const int = Utils().int;
-            const float = Utils().float;
+            const sps = new SolarPowerSystem();
+            const bc = new BatteryCable();
+            const int = Utils.int;
+            const float = Utils.float;
 
             $.fn.minmax = function(min, max) {
                 const value = float($(this).val());
