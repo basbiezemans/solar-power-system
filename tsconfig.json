@@ -22,6 +22,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/utils.ts", "src/cable.ts", "src/battery.ts", "src/system.ts", "src/index.ts"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
 }
