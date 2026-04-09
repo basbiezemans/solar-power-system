@@ -17,11 +17,11 @@ npm run test:watch   # Continuous testing during development
 ```
 
 ### Running the Application
-1. Serve the project with a local web server (e.g., `python -m http.server`)
-2. Open `index.html` in a browser
-3. The app loads compiled JS from `/dist/` directory
+```bash
+npm run preview
+```
 
 ## Browser Compatibility
 - ES2020 target
-- Requires modern browser with ES module support
-- jQuery 3.6.0 for DOM manipulation
+- Browser must support ES modules (ESM)
+- Browser must support WebSocket connections
