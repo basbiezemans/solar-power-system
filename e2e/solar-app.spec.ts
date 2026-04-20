@@ -345,7 +345,7 @@ test.describe('Solar Power System Integration Tests', () => {
     }
   });
 
-  test('should update battery amp hours when device watt hours change', async ({ page }) => {
+  test('should update battery capacity (amp hours)', async ({ page }) => {
     // Add a device
     await page.locator('button:has-text("Add device")').click();
     let inputs = page.locator('dialog.device-modal input[type="text"], dialog.device-modal input[type="number"]');
@@ -373,7 +373,7 @@ test.describe('Solar Power System Integration Tests', () => {
     await expect(page.locator('#minimum-capacity')).toHaveValue('84');
   });
 
-  test('should update fuse size based on device watt hours', async ({ page }) => {
+  test('should update fuse size amperage', async ({ page }) => {
     // Add a significant device
     await page.locator('button:has-text("Add device")').click();
     let inputs = page.locator('dialog.device-modal input[type="text"], dialog.device-modal input[type="number"]');
@@ -401,7 +401,7 @@ test.describe('Solar Power System Integration Tests', () => {
     await expect(page.locator('#fuse-size-amperage')).toHaveValue('625');
   });
 
-  test('should update charge controller amperage with device changes', async ({ page }) => {
+  test('should update charge controller amperage', async ({ page }) => {
     // Add a device
     await page.locator('button:has-text("Add device")').click();
     let inputs = page.locator('dialog.device-modal input[type="text"], dialog.device-modal input[type="number"]');
@@ -429,7 +429,7 @@ test.describe('Solar Power System Integration Tests', () => {
     await expect(page.locator('#controller-amperage')).toHaveValue('180');
   });
 
-  test('should update battery cable wire gauge when amperage changes', async ({ page }) => {
+  test('should update battery cable wire gauge', async ({ page }) => {
     // Add a device to generate amperage
     await page.locator('button:has-text("Add device")').click();
     let inputs = page.locator('dialog.device-modal input[type="text"], dialog.device-modal input[type="number"]');
