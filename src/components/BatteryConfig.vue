@@ -8,7 +8,7 @@
           <option value="lithium">Lithium Ion</option>
           <option value="leadacid">Lead Acid</option>
         </select>
-        <label for="type">Type</label>
+        <label>Type</label>
       </div>
 
       <div class="form-group">
@@ -17,7 +17,7 @@
           <option value="24">24V</option>
           <option value="48">48V</option>
         </select>
-        <label for="voltage">Voltage</label>
+        <label>Voltage</label>
       </div>
 
       <div class="capacity-section">
@@ -27,9 +27,10 @@
             type="text"
             :value="ampHours"
             readonly
+            id="minimum-capacity"
             class="readonly-input"
           >
-          <label for="amphours">Amp hours</label>
+          <label>Amp hours</label>
         </div>
 
         <div class="section-label">Fuse Size</div>
@@ -38,9 +39,10 @@
             type="text"
             :value="fuseSizeAmperage"
             readonly
+            id="fuse-size-amperage"
             class="readonly-input"
           >
-          <label for="ampfuse">Amp</label>
+          <label>Amp</label>
         </div>
       </div>
     </fieldset>

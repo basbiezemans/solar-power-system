@@ -3,25 +3,27 @@
     <fieldset>
       <legend>Solar Panel</legend>
       <div class="form-group">
-        <input 
+        <input
           v-model.number="avgSunHours"
           type="number"
           min="1"
           max="24"
           @change="validateSunHours"
+          id="avg-sun-hours"
           class="number-input"
         >
-        <label for="avgsun">Avg. sun hours per day</label>
+        <label>Avg. sun hours per day</label>
       </div>
 
       <div class="form-group">
-        <input 
+        <input
           type="text"
           :value="solarArrayWattage"
           readonly
+          id="array-wattage"
           class="readonly-input"
         >
-        <label for="solarray">Watt (minimum)</label>
+        <label>Watt (minimum)</label>
       </div>
     </fieldset>
   </div>

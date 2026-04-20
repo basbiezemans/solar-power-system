@@ -10,17 +10,18 @@
             {{ length }} ft ({{ (length / 3.281).toFixed(1) }} m)
           </option>
         </select>
-        <label for="cablelen">Length</label>
+        <label>Length</label>
       </div>
 
       <div class="form-group">
-        <input 
+        <input
           type="text"
           :value="wireGauge"
           readonly
+          id="wire-gauge"
           class="readonly-input"
         >
-        <label for="wiregauge">Gauge / AWG</label>
+        <label>Gauge / AWG</label>
       </div>
     </fieldset>
   </div>
@@ -52,7 +53,7 @@ const updateWireGauge = () => {
 
   const options = currentOptions.value
   const current = options.find(e => e >= props.amperage) as number
-  
+
   if (current) {
     wireGauge.value = batteryCable.getWireGauge(parseInt(cableLength.value), current)
   } else {

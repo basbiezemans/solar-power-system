@@ -3,13 +3,14 @@
     <fieldset>
       <legend>Battery Charge Controller</legend>
       <div class="form-group">
-        <input 
+        <input
           type="text"
           :value="amperage"
           readonly
+          id="controller-amperage"
           class="readonly-input"
         >
-        <label for="amperage">Amp (minimum)</label>
+        <label>Amp (minimum)</label>
       </div>
     </fieldset>
   </div>
